@@ -1,39 +1,46 @@
 import { useState } from 'react';
+import { auth } from '../firebase';
 
-export default function Home(): JSX.Element {
-  const [tasks, setTasks] = useState<string[]>([]);
-    const [inputValue, setInputValue] = useState<string>('');
+const IndexPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-      const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-          setInputValue(e.target.value);
-            };
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      // Redirect the user to the To-Do List page
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
-              const handleAddTask = (): void => {
-                  if (inputValue.trim() !== '') {
-                        setTasks([...tasks, inputValue]);
-                              setInputValue('');
-                                  }
-                                    };
+  return (
+    <div>
+      <h1>Login</h1>
+      <form onSubmit={handleLogin}>
+        <label>
+          Email:
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </label>
+        <br />
+        <button type="submit">Log in</button>
+      </form>
+    </div>
+  );
+};
 
-                                      const handleRemoveTask = (index: number): void => {
-                                          const newTasks = [...tasks];
-                                              newTasks.splice(index, 1);
-                                                  setTasks(newTasks);
-                                                    };
-
-                                                      return (
-                                                          <div>
-                                                                <h1>To Do List</h1>
-                                                                      <input type="text" value={inputValue} onChange={handleInputChange} />
-                                                                            <button onClick={handleAddTask}>Add Task</button>
-                                                                                  <ul>
-                                                                                          {tasks.map((task, index) => (
-                                                                                                    <li key={index}>
-                                                                                                                {task} <button onClick={() => handleRemoveTask(index)}>Remove</button>
-                                                                                                                          </li>
-                                                                                                                                  ))}
-                                                                                                                                        </ul>
-                                                                                                                                            </div>
-                                                                                                                                              );
-                                                                                                                                              }
-                                                                                                                                              
+export default IndexPage;
