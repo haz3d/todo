@@ -1,6 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
-
-module.exports = nextConfig
+module.exports = {
+  // remove 'images' from the experimental property
+  experimental: {
+    swcLoader: true
+  }
+};
